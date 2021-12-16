@@ -1,22 +1,27 @@
 <template>
     <main class="d-flex justify-content-center align-items-center">
-        <div class="my_container">
+        <div class="my_container" v-if="albums != null">
             <div class="row row-cols-5 gx-4">
                 <div class="col" v-for="(album, i) in albums" :key="i">
                     <AlbumCard :album="album"/>
                 </div>
             </div>
         </div>
+        <div v-else>
+            <Loader/>
+        </div>
     </main>
 </template>
 
 <script>
 import AlbumCard from './commons/AlbumCard.vue'
+import Loader from './commons/Loader.vue'
 
 export default {
     name: 'Main',
     components: {
-        AlbumCard
+        AlbumCard,
+        Loader
     },
     data() {
         return {
@@ -24,20 +29,24 @@ export default {
         }
     },
     created() {
-        const axios = require('axios');
-
         const self = this;
 
-        // Make a request for a user with a given ID
-        axios.get('https://flynn.boolean.careers/exercises/api/array/music')
-        .then(function (response) {
-            // handle success
-            self.albums = response.data.response;
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
-        })
+        setTimeout(() => {
+            const axios = require('axios');
+
+            console.log()
+
+            // Make a request for a user with a given ID
+            axios.get('https://flynn.boolean.careers/exercises/api/array/music')
+            .then(function (response) {
+                // handle success
+                self.albums = response.data.response;
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+        }, 1000);
     }
 }
 </script>
