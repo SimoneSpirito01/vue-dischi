@@ -1,8 +1,9 @@
 <template>
     <main class="d-flex justify-content-center align-items-center">
         <div class="my_container" v-if="albums != null">
+            <Nav :albums="albums" @search="getGenere"/>
             <div class="row row-cols-5 gx-4">
-                <div class="col" v-for="(album, i) in albums" :key="i">
+                <div class="col" v-for="(album, i) in albumsFiltered" :key="i">
                     <AlbumCard :album="album"/>
                 </div>
             </div>
@@ -14,39 +15,53 @@
 </template>
 
 <script>
-import AlbumCard from './commons/AlbumCard.vue'
-import Loader from './commons/Loader.vue'
+import AlbumCard from './commons/AlbumCard.vue';
+import Loader from './commons/Loader.vue';
+import Nav from './sections/Nav.vue';
 
 export default {
     name: 'Main',
     components: {
         AlbumCard,
-        Loader
+        Loader,
+        Nav
     },
     data() {
         return {
-            albums: null
+            albums: null,
+            genere: ''
+        }
+    },
+    methods: {
+        getGenere: function(genere){
+            this.genere = genere
+            console.log(this.genere)
         }
     },
     created() {
+        console.log(this.genere)
         const self = this;
 
-        setTimeout(() => {
+        // setTimeout(() => {
             const axios = require('axios');
 
-            console.log()
-
-            // Make a request for a user with a given ID
             axios.get('https://flynn.boolean.careers/exercises/api/array/music')
             .then(function (response) {
-                // handle success
                 self.albums = response.data.response;
             })
             .catch(function (error) {
-                // handle error
                 console.log(error);
             })
-        }, 1000);
+        // }, 1000);
+    },
+    computed: {
+        albumsFiltered(){
+            const arrayFiltered = this.albums.filter(element => {
+                return element.genre.toLowerCase().includes(this.genere.toLowerCase());
+            });
+            console.log(arrayFiltered)
+            return arrayFiltered;
+        }
     }
 }
 </script>
