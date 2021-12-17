@@ -1,6 +1,6 @@
 <template>
     <div class="selects">
-        <Select @search="getGenere; $emit('search', genere)" :albums="albums"/>
+        <Select @search="getGenere; $emit('search', genere )" :albums="albums"/>
     </div>
 </template>
 
@@ -24,8 +24,9 @@ export default {
         myEvent: null
     },
     methods: {
-        getGenere: function(a){
-            this.genere = a;
+        getGenere: function(genere){
+            this.genere = genere;
+            this.$emit('search', genere)
         }
     }
 }
