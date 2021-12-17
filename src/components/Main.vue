@@ -2,7 +2,7 @@
     <main class="d-flex justify-content-center align-items-center">
         <div class="my_container" v-if="albums != null">
             <Nav :albums="albums" @search="getGenere"/>
-            <div class="row row-cols-5 gx-4">
+            <div class="row row-cols-5 gx-4 justify-content-center">
                 <div class="col" v-for="(album, i) in albumsFiltered" :key="i">
                     <AlbumCard :album="album"/>
                 </div>
@@ -35,7 +35,6 @@ export default {
     methods: {
         getGenere: function(genere){
             this.genere = genere
-            console.log(this.genere)
         }
     },
     created() {
@@ -56,11 +55,15 @@ export default {
     },
     computed: {
         albumsFiltered(){
-            const arrayFiltered = this.albums.filter(element => {
-                return element.genre.toLowerCase().includes(this.genere.toLowerCase());
-            });
-            console.log(arrayFiltered)
-            return arrayFiltered;
+            if (this.genere == 'All'){
+                return this.albums;
+            } else {
+                const arrayFiltered = this.albums.filter(element => {
+                    return element.genre.toLowerCase().includes(this.genere.toLowerCase());
+                });
+                return arrayFiltered;
+            }
+            
         }
     }
 }

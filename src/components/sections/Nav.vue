@@ -1,6 +1,6 @@
 <template>
     <div class="selects">
-        <Select @search="getGenere; $emit('search', genere )" :albums="albums"/>
+        <Select @search="getGenere" :albums="albums"/>
     </div>
 </template>
 
