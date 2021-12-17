@@ -1,7 +1,7 @@
 <template>
     <main class="d-flex justify-content-center align-items-center">
         <div class="my_container" v-if="albums != null">
-            <Nav :albums="albums" @search="getGenere"/>
+            <Nav :albums="albums" @search="getGenereAndArtista"/>
             <div class="row row-cols-5 gx-4 justify-content-center">
                 <div class="col" v-for="(album, i) in albumsFiltered" :key="i">
                     <AlbumCard :album="album"/>
@@ -29,16 +29,17 @@ export default {
     data() {
         return {
             albums: null,
-            genere: ''
+            genere: 'All',
+            artista: 'All'
         }
     },
     methods: {
-        getGenere: function(genere){
-            this.genere = genere
+        getGenereAndArtista: function(genere, artista){
+            this.genere = genere;
+            this.artista = artista;
         }
     },
     created() {
-        console.log(this.genere)
         const self = this;
 
         // setTimeout(() => {
@@ -56,14 +57,30 @@ export default {
     computed: {
         albumsFiltered(){
             if (this.genere == 'All'){
-                return this.albums;
+                if (this.artista == 'All'){
+                    return this.albums;
+                } else {
+                    let arrayFiltered = this.albums.filter(element => {
+                        return element.author.toLowerCase().includes(this.artista.toLowerCase());
+                    });
+                    return arrayFiltered;
+                }
             } else {
-                const arrayFiltered = this.albums.filter(element => {
-                    return element.genre.toLowerCase().includes(this.genere.toLowerCase());
-                });
-                return arrayFiltered;
+                if (this.artista == 'All'){
+                    let arrayFiltered = this.albums.filter(element => {
+                        return element.genre.toLowerCase().includes(this.genere.toLowerCase());
+                     });
+                    return arrayFiltered;
+                } else {
+                    let arrayFiltered = this.albums.filter(element => {
+                        return element.genre.toLowerCase().includes(this.genere.toLowerCase());
+                    });
+                    arrayFiltered = arrayFiltered.filter(element => {
+                        return element.author.toLowerCase().includes(this.artista.toLowerCase());
+                    })
+                    return arrayFiltered;
+                }
             }
-            
         }
     }
 }
@@ -82,11 +99,11 @@ export default {
             max-height: 800px;
 
             .row {
-                height: 100%;
+                height: calc(100% - 60px);
                 align-content: center;
 
                 .col {
-                    height: 45%;
+                    height: 48%;
                     margin: 10px 0;
                 }
             }

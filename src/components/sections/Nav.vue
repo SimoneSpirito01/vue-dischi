@@ -1,6 +1,7 @@
 <template>
     <div class="selects">
-        <Select @search="getGenere" :albums="albums"/>
+        <Select @search="getGenere" selectLabel="il genere" :array="generi"/>
+        <Select @search="getArtista" selectLabel="l'artista" :array="artisti"/>
     </div>
 </template>
 
@@ -17,7 +18,10 @@ export default {
     },
     data(){
         return {
-            genere: ''
+            genere: 'All',
+            artista: 'All',
+            generi: ['All'],
+            artisti: ['All'],
         }
     },
     emits: {
@@ -26,8 +30,24 @@ export default {
     methods: {
         getGenere: function(genere){
             this.genere = genere;
-            this.$emit('search', genere)
+            this.$emit('search', this.genere, this.artista)
+        },
+        getArtista: function(artista){
+            this.artista = artista;
+            this.$emit('search', this.genere, this.artista)
         }
+    },
+    created(){
+        this.albums.forEach(element => {
+            if (!this.generi.includes(element.genre)) {
+                this.generi.push(element.genre)
+            }
+        });
+        this.albums.forEach(element => {
+            if (!this.artisti.includes(element.author)) {
+                this.artisti.push(element.author)
+            }
+        });
     }
 }
 </script>
@@ -35,7 +55,14 @@ export default {
 <style lang="scss" scoped>
 
     .selects {
-        text-align: center;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > * {
+            margin: 10px;
+        }
     }
 
 </style>
